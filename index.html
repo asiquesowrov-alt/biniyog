@@ -1,137 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Biniyog | Mobile Login</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<style>
-body {
-  font-family: Arial, sans-serif;
-  background: #f2f4f7;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-.box {
-  background: #fff;
-  padding: 25px;
-  width: 100%;
-  max-width: 360px;
-  text-align: center;
-  border-radius: 10px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-}
-h2 {
-  margin-bottom: 10px;
-}
-input {
-  width: 100%;
-  padding: 12px;
-  margin: 10px 0;
-  font-size: 16px;
-}
-button {
-  width: 100%;
-  padding: 12px;
-  font-size: 16px;
-  margin-top: 10px;
-  cursor: pointer;
-}
-#msg {
-  margin-top: 12px;
-  font-size: 14px;
-}
-</style>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css">
+    <!-- BoxIcons -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <title>HassanAwan</title>
 </head>
-
 <body>
+    <section class="container forms">
+    <div class="form login">
+        <h3 class="heading">Login-Form</h3>
+        <form action="#" class="content">
+            <div class="line underline"></div>
+            
+            <div class="field input">
+                <input type="email" placeholder="Enter your Email" />
+            </div>
 
-<div class="box">
-  <h2>Biniyog ✅</h2>
-  <p>Login with Mobile Number</p>
+            <div class="field input">
+            <input type="password" placeholder="Enter your Password" class="password" />
+            <i class='bx bx-hide hide-show'></i>
+            </div>
+            
+            <div class="forg">
+                <a href="#" class="forget">Forget password?</a>
+            </div>
 
-  <input type="tel" id="phone" placeholder="+8801XXXXXXXXX">
-  <button onclick="sendOTP()">Send OTP</button>
+            <div class="field btn">
+                <button>Login</button>
+            </div>
 
-  <div id="otpSection" style="display:none;">
-    <input type="number" id="otp" placeholder="Enter OTP">
-    <button onclick="verifyOTP()">Verify OTP</button>
-  </div>
+            <div class="link sign-login">
+                <span>Don't have an Account!</span>
+                <a href="#" class="forget">Sign up</a>
+            </div>
 
-  <div id="msg"></div>
-</div>
+            <div class="line"></div>
+            <!-- Other Login Options -->
 
-<!-- Firebase -->
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAuth, RecaptchaVerifier, signInWithPhoneNumber }
-from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+            <div class="thirdLogin field facebook">
+                <i class='bx bxl-facebook-circle face-icon'></i>
+                <span>Login with facebook</span>
+            </div>
+            
+            <div class="thirdLogin field google">
+                <i class='bx bxl-google face-icon'></i>
+                <span>Login with google</span>
+            </div>
 
-const firebaseConfig = {
-  apiKey: "AIzaSyCTIkplt-eH84ZEQXllDeP7rXUBGQeAdBU",
-  authDomain: "biniyog-web-b6273.firebaseapp.com",
-  projectId: "biniyog-web-b6273",
-  storageBucket: "biniyog-web-b6273.appspot.com",
-  messagingSenderId: "896287012716",
-  appId: "1:896287012716:web:2ddd7892a97cb453516549"
-};
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+        </form>
+    </div>
 
-window.recaptchaVerifier = new RecaptchaVerifier(
-  auth,
-  'recaptcha-container',
-  { size: 'invisible' }
-);
 
-window.sendOTP = function () {
-  const phone = document.getElementById("phone").value.trim();
-  const msg = document.getElementById("msg");
+    <!-- SignUp Form -->
 
-  if (!phone.startsWith("+")) {
-    msg.style.color = "red";
-    msg.innerText = "⚠️ +880 সহ নাম্বার লিখুন";
-    return;
-  }
 
-  signInWithPhoneNumber(auth, phone, window.recaptchaVerifier)
-    .then(confirmationResult => {
-      window.confirmationResult = confirmationResult;
-      document.getElementById("otpSection").style.display = "block";
-      msg.style.color = "green";
-      msg.innerText = "✅ OTP পাঠানো হয়েছে";
-    })
-    .catch(error => {
-      msg.style.color = "red";
-      msg.innerText = error.message;
-    });
-};
+    <div class="form signup">
+        <h3 class="heading">SignUp-Form</h3>
+        <form action="#" class="content">
+            <div class="line underline"></div>
+            
+            <div class="field input">
+                <input type="email" placeholder="Enter your Email" required />
+            </div>
 
-window.verifyOTP = function () {
-  const otp = document.getElementById("otp").value.trim();
-  const msg = document.getElementById("msg");
+            <div class="field input">
+            <input type="password" placeholder="Enter your new Password" class="password" required />
+            <i class='bx bx-hide hide-show'></i>
+            </div>
 
-  if (!otp) {
-    msg.innerText = "⚠️ OTP দিন";
-    return;
-  }
+            <div class="field input">
+            <input type="password" placeholder="Confirm Password" class="password" required />
+            <i class='bx bx-hide hide-show'></i>
+            </div>
 
-  window.confirmationResult.confirm(otp)
-    .then(() => {
-      msg.style.color = "green";
-      msg.innerText = "🎉 Login Successful";
-    })
-    .catch(() => {
-      msg.style.color = "red";
-      msg.innerText = "❌ ভুল OTP";
-    });
-};
-</script>
+            <div class="space"></div>
 
-<div id="recaptcha-container"></div>
+            <div class="field btn">
+                <button>Sign Up</button>
+            </div>
 
+            <div class="link sign-login">
+                <span>Already have an Account!</span>
+                <a href="#" class="forget">Login</a>
+            </div>
+
+
+            <div class="line"></div>
+            <!-- Other Login Options -->
+
+            <div class="thirdLogin field facebook">
+                <i class='bx bxl-facebook-circle face-icon'></i>
+                <span>SignUp with facebook</span>
+            </div>
+            
+            <div class="thirdLogin field google">
+                <i class='bx bxl-google face-icon'></i>
+                <span>SignUp with google</span>
+            </div>
+
+            
+
+
+        </form>
+    </div>
+    </section>
+
+    <script src="./script.js"></script>
 </body>
 </html>
