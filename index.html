@@ -2,16 +2,16 @@
 <html lang="bn">
 <head>
   <meta charset="UTF-8">
-  <title>Biniyog | ফোন লগইন</title>
+  <title>Biniyog | Phone Login</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Firebase SDK -->
+  <!-- Firebase COMPAT SDK (HTML এর জন্য) -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: Arial;
       background: #0f2027;
       display: flex;
       justify-content: center;
@@ -27,20 +27,16 @@
       border-radius: 10px;
       text-align: center;
     }
-    input {
+    input, button {
       width: 100%;
       padding: 10px;
-      margin: 10px 0;
+      margin-top: 10px;
       font-size: 16px;
     }
     button {
-      width: 100%;
-      padding: 10px;
       background: #2c5364;
       color: white;
       border: none;
-      font-size: 16px;
-      cursor: pointer;
     }
     #otpBox { display: none; }
   </style>
@@ -56,7 +52,7 @@
   <button onclick="sendOTP()">OTP পাঠান</button>
 
   <div id="otpBox">
-    <input id="otp" type="number" placeholder="OTP লিখুন">
+    <input id="otp" placeholder="OTP লিখুন">
     <button onclick="verifyOTP()">Verify</button>
   </div>
 
@@ -64,12 +60,12 @@
 </div>
 
 <script>
-  // 🔴 Firebase Config (এখানে নিজেরটা বসাও)
+  // ✅ তোমার Firebase Config (ঠিক আছে)
   const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT.firebaseapp.com",
-    projectId: "YOUR_PROJECT_ID",
-    appId: "YOUR_APP_ID"
+    apiKey: "AIzaSyDrU8KkFr1z4KZOSqHjXyeZMhRykQjiPbI",
+    authDomain: "biniyog-c67ae.firebaseapp.com",
+    projectId: "biniyog-c67ae",
+    appId: "1:884413798318:web:ad0e4bf6baa00183b6da3f"
   };
 
   firebase.initializeApp(firebaseConfig);
