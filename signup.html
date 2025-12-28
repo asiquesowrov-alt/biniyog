@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Biniyog | Signup</title>
+
+  <style>
+    *{box-sizing:border-box;font-family:Arial}
+    body{
+      margin:0;
+      height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      background:linear-gradient(135deg,#1d4350,#a43931);
+    }
+    .box{
+      background:#fff;
+      max-width:400px;
+      width:100%;
+      padding:25px;
+      border-radius:12px;
+      box-shadow:0 10px 25px rgba(0,0,0,.25);
+    }
+    h2{text-align:center;color:#1d4350}
+    label{display:block;margin-top:15px;font-size:14px}
+    input{
+      width:100%;
+      padding:12px;
+      margin-top:6px;
+      border:1px solid #ccc;
+      border-radius:8px;
+    }
+    button{
+      width:100%;
+      margin-top:20px;
+      padding:12px;
+      background:#1d4350;
+      color:#fff;
+      border:none;
+      border-radius:8px;
+      font-size:16px;
+      cursor:pointer;
+    }
+    button:hover{background:#16343e}
+    .links{text-align:center;margin-top:15px;font-size:14px}
+    a{color:#1d4350;text-decoration:none}
+  </style>
+</head>
+<body>
+
+<div class="box">
+  <h2>Biniyog Signup</h2>
+
+  <form>
+    <label>নাম</label>
+    <input type="text" placeholder="আপনার নাম" required>
+
+    <label>মোবাইল নাম্বার</label>
+    <input type="tel" placeholder="01XXXXXXXXX" required>
+
+    <label>পাসওয়ার্ড</label>
+    <input type="password" placeholder="পাসওয়ার্ড" required>
+
+    <label>কনফার্ম পাসওয়ার্ড</label>
+    <input type="password" placeholder="আবার পাসওয়ার্ড" required>
+
+    <button type="submit">একাউন্ট তৈরি করুন</button>
+  </form>
+
+  <div class="links">
+    আগে থেকেই একাউন্ট আছে? <a href="index.html">লগইন করুন</a>
+  </div>
+</div>
+
+</body>
+</html>
