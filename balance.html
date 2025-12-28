@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<title>Biniyog | Balance</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body{margin:0;font-family:Arial;background:#f4f6f8}
+.header{background:#2563eb;color:#fff;padding:15px;text-align:center}
+.card{background:#fff;margin:15px;padding:15px;border-radius:12px;text-align:center}
+.amount{font-size:32px;font-weight:bold;color:#2563eb}
+.row{display:flex;justify-content:space-between;margin-top:10px}
+.back{text-align:center;margin:15px}
+.back a{text-decoration:none;color:#2563eb;font-weight:bold}
+</style>
+</head>
+
+<body>
+
+<script>
+const user = localStorage.getItem("loggedInUser");
+if(!user){ location.href="index.html"; }
+</script>
+
+<div class="header">
+<h2>💰 My Balance</h2>
+</div>
+
+<div class="card">
+<div>Total Balance</div>
+<div class="amount" id="balance">৳0</div>
+
+<div class="row"><span>Approved Deposit</span><span id="deposit">৳0</span></div>
+<div class="row"><span>Approved Withdraw</span><span id="withdraw">৳0</span></div>
+</div>
+
+<div class="back">
+<a href="dashboard.html">⬅ Dashboard</a>
+</div>
+
+<script>
+let deposits = JSON.parse(localStorage.getItem("deposits")) || [];
+let withdraws = JSON.parse(localStorage.getItem("withdraws")) || [];
+
+let totalDeposit = 0;
+let totalWithdraw = 0;
+
+deposits
+.filter(d=>d.user===user && d.status==="approved")
+.forEach(d=> totalDeposit += Number(d.amount));
+
+withdraws
+.filter(w=>w.user===user && w.status==="approved")
+.forEach(w=> totalWithdraw += Number(w.amount));
+
+document.getElementById("deposit").innerText = "৳"+totalDeposit;
+document.getElementById("withdraw").innerText = "৳"+totalWithdraw;
+document.getElementById("balance").innerText = "৳"+(totalDeposit-totalWithdraw);
+</script>
+
+</body>
+</html>
