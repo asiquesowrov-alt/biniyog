@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Biniyog | Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: #f2f2f2;
+    }
+
+    .login-container {
+      max-width: 380px;
+      margin: 60px auto;
+      background: #fff;
+      border-radius: 18px;
+      padding: 30px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .logo img {
+      width: 110px;
+      margin-bottom: 10px;
+    }
+
+    .logo h2 {
+      color: #7b3fbf;
+      margin-bottom: 30px;
+    }
+
+    .input-box {
+      display: flex;
+      align-items: center;
+      border-bottom: 2px solid #ddd;
+      margin-bottom: 25px;
+      padding-bottom: 6px;
+    }
+
+    .input-box span {
+      font-size: 20px;
+      margin-right: 10px;
+      color: #777;
+    }
+
+    .input-box input {
+      border: none;
+      outline: none;
+      width: 100%;
+      font-size: 16px;
+      background: transparent;
+    }
+
+    .login-btn {
+      width: 100%;
+      background: #7b3fbf;
+      border: none;
+      padding: 14px;
+      border-radius: 30px;
+      font-size: 16px;
+      color: #fff;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .login-btn:hover {
+      background: #6a33a5;
+    }
+
+    .bottom-text {
+      margin-top: 20px;
+      font-size: 14px;
+      color: #555;
+    }
+
+    .bottom-text a {
+      color: #7b3fbf;
+      text-decoration: none;
+      font-weight: 600;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="login-container">
+    
+    <div class="logo">
+      <!-- তুমি চাইলে এখানে নিজের লোগো দিতে পারো -->
+      <img src="https://cdn-icons-png.flaticon.com/512/4140/4140037.png" alt="Login Icon">
+      <h2>Welcome</h2>
+    </div>
+
+    <form onsubmit="login(event)">
+      <div class="input-box">
+        <span>📞</span>
+        <input type="tel" id="phone" placeholder="Mobile Number" required>
+      </div>
+
+      <div class="input-box">
+        <span>🔒</span>
+        <input type="password" id="password" placeholder="Password" required>
+      </div>
+
+      <button class="login-btn" type="submit">LOGIN</button>
+    </form>
+
+    <div class="bottom-text">
+      Not registered yet? <br>
+      <a href="signup.html">Open new account</a>
+    </div>
+
+  </div>
+
+  <script>
+    function login(e) {
+      e.preventDefault();
+
+      // Temporary demo login
+      const phone = document.getElementById("phone").value;
+      const pass = document.getElementById("password").value;
+
+      if (phone.length < 11 || pass.length < 4) {
+        alert("Invalid login details");
+        return;
+      }
+
+      // Login success (demo)
+      localStorage.setItem("loggedIn", "yes");
+
+      // Redirect to dashboard
+      window.location.href = "dashboard.html";
+    }
+  </script>
+
+</body>
+</html>
