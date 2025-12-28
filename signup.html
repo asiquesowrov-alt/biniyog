@@ -1,66 +1,117 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Biniyog | Signup</title>
+  <meta charset="UTF-8">
+  <title>Biniyog | Signup</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<style>
-body{
-  margin:0;
-  font-family:Arial;
-  height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  background:#0f2027;
-}
-.box{
-  background:#fff;
-  width:90%;
-  max-width:360px;
-  padding:25px;
-  border-radius:10px;
-}
-input,button{
-  width:100%;
-  padding:12px;
-  margin-top:10px;
-}
-button{
-  background:#0f2027;
-  color:#fff;
-  border:none;
-}
-a{
-  display:block;
-  margin-top:12px;
-  text-align:center;
-  text-decoration:none;
-}
-</style>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #0f172a;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .box {
+      background: #020617;
+      padding: 25px;
+      width: 100%;
+      max-width: 350px;
+      border-radius: 10px;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 12px;
+      border-radius: 6px;
+      border: none;
+      outline: none;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #22c55e;
+      color: #000;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:hover {
+      opacity: 0.9;
+    }
+    .link {
+      text-align: center;
+      margin-top: 15px;
+    }
+    .link a {
+      color: #38bdf8;
+      text-decoration: none;
+    }
+  </style>
 </head>
 
 <body>
-<div class="box">
-  <h2>নতুন একাউন্ট</h2>
 
-  <form id="signupForm">
-    <input type="text" placeholder="নাম" required>
-    <input type="tel" placeholder="01XXXXXXXXX" required>
-    <input type="password" placeholder="পাসওয়ার্ড" required>
-    <input type="password" placeholder="কনফার্ম পাসওয়ার্ড" required>
-    <button type="submit">একাউন্ট তৈরি করুন</button>
-  </form>
+  <div class="box">
+    <h2>Create Account</h2>
 
-  <a href="index.html">লগইনে ফিরে যান</a>
-</div>
+    <input type="tel" id="phone" placeholder="মোবাইল নাম্বার" required>
+    <input type="password" id="password" placeholder="পাসওয়ার্ড" required>
 
-<script>
-document.getElementById("signupForm").onsubmit = function(e){
-  e.preventDefault();
-  alert("Signup কাজ করছে ✅");
-};
-</script>
+    <button onclick="signup()">Sign Up</button>
+
+    <div class="link">
+      <a href="index.html">Already have account? Login</a>
+    </div>
+  </div>
+
+  <script>
+    function signup() {
+      const phone = document.getElementById("phone").value.trim();
+      const password = document.getElementById("password").value;
+
+      if (phone === "" || password === "") {
+        alert("সব ফিল্ড পূরণ করুন");
+        return;
+      }
+
+      if (password.length < 6) {
+        alert("পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে");
+        return;
+      }
+
+      // আগের user list আনো
+      let users = JSON.parse(localStorage.getItem("users")) || [];
+
+      // একই নাম্বার আছে কি না
+      const exists = users.find(u => u.phone === phone);
+      if (exists) {
+        alert("এই নাম্বার দিয়ে আগেই অ্যাকাউন্ট আছে");
+        return;
+      }
+
+      // নতুন user যোগ
+      users.push({
+        phone: phone,
+        password: password
+      });
+
+      localStorage.setItem("users", JSON.stringify(users));
+
+      alert("Account সফলভাবে তৈরি হয়েছে!");
+
+      // Login পেজে পাঠাও
+      window.location.href = "index.html";
+    }
+  </script>
+
 </body>
 </html>
