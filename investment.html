@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<title>Biniyog | Investment</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{margin:0;font-family:Arial;background:#0f172a;color:#fff}
+header{background:#020617;padding:15px;text-align:center;font-size:20px}
+.container{padding:15px}
+.card{
+  background:#020617;
+  padding:15px;
+  border-radius:15px;
+  margin-bottom:15px;
+}
+button{
+  width:100%;
+  padding:10px;
+  background:#22c55e;
+  border:none;
+  border-radius:8px;
+  font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<header>📈 Investment Plans</header>
+
+<div class="container">
+
+<div class="card">
+<h3>Mini Plan</h3>
+<p>৳500 | Daily ৳90 | 10 Days</p>
+<button onclick="buy('Mini',500,90,10)">Buy</button>
+</div>
+
+<div class="card">
+<h3>Windmill Plan</h3>
+<p>৳1000 | Daily ৳197 | 10 Days</p>
+<button onclick="buy('Windmill',1000,197,10)">Buy</button>
+</div>
+
+<div class="card">
+<h3>Share Plan</h3>
+<p>৳2000 | Daily ৳470 | 10 Days</p>
+<button onclick="buy('Share-2k',2000,470,10)">Buy</button>
+</div>
+
+<div class="card">
+<h3>Share Plan</h3>
+<p>৳5000 | Daily ৳1280 | 10 Days</p>
+<button onclick="buy('Share-5k',5000,1280,10)">Buy</button>
+</div>
+
+<div class="card">
+<h3>National Plan</h3>
+<p>৳20000 | Daily ৳5500 | 6 Days</p>
+<button onclick="buy('National',20000,5500,6)">Buy</button>
+</div>
+
+<a href="dashboard.html" style="display:block;text-align:center;color:#38bdf8">⬅ Dashboard</a>
+
+</div>
+
+<script>
+const user = localStorage.getItem("loggedInUser");
+if(!user) location.href="index.html";
+
+function buy(name,amount,daily,days){
+  let balanceKey = "balance_"+user;
+  let balance = Number(localStorage.getItem(balanceKey))||0;
+
+  if(balance < amount){
+    alert("পর্যাপ্ত ব্যালেন্স নেই");
+    return;
+  }
+
+  balance -= amount;
+  localStorage.setItem(balanceKey, balance);
+
+  let investments = JSON.parse(localStorage.getItem("investments"))||[];
+
+  investments.push({
+    user,
+    name,
+    amount,
+    daily,
+    days,
+    start: Date.now(),
+    earned:0,
+    lastCalc: Date.now()
+  });
+
+  localStorage.setItem("investments", JSON.stringify(investments));
+
+  processReferBonus(user, amount);
+
+  alert("Investment successful!");
+  location.href="dashboard.html";
+}
+
+/* ===== REFER BONUS ENGINE ===== */
+function processReferBonus(userPhone, investAmount){
+  let users = JSON.parse(localStorage.getItem("users")) || [];
+  let me = users.find(u=>u.phone===userPhone);
+
+  if(!me || !me.referredBy) return;
+
+  let levelPercent=[0,0.12,0.05,0.02];
+
+  let l1 = users.find(u=>u.referralCode===me.referredBy);
+
+  if(l1 && !me.l1Paid){
+    addBonus(l1.phone,100);
+    l1.referReward+=100;
+    me.l1Paid=true;
+  }
+
+  let parent=l1;
+  for(let i=1;i<=3;i++){
+    if(!parent || !parent.referredBy) break;
+    let up = users.find(u=>u.referralCode===parent.referredBy);
+    if(up){
+      let bonus=investAmount*levelPercent[i];
+      addBonus(up.phone,bonus);
+      up.referReward=(up.referReward||0)+bonus;
+    }
+    parent=up;
+  }
+
+  localStorage.setItem("users", JSON.stringify(users));
+}
+
+function addBonus(phone,amount){
+  let key="balance_"+phone;
+  localStorage.setItem(key,(Number(localStorage.getItem(key))||0)+amount);
+}
+</script>
+
+</body>
+</html>
