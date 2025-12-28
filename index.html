@@ -2,107 +2,144 @@
 <html lang="bn">
 <head>
   <meta charset="UTF-8">
-  <title>Biniyog | Phone Login</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Biniyog | Login</title>
 
-  <!-- Firebase COMPAT SDK (HTML এর জন্য) -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <!-- SEO -->
+  <meta name="description" content="Biniyog - মোবাইল নাম্বার ও পাসওয়ার্ড দিয়ে নিরাপদ লগইন করুন।" />
 
   <style>
+    * {
+      box-sizing: border-box;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
     body {
-      font-family: Arial;
-      background: #0f2027;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
       margin: 0;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-    .box {
-      background: white;
+
+    .login-box {
+      background: #ffffff;
+      width: 100%;
+      max-width: 380px;
       padding: 25px;
-      width: 100%;
-      max-width: 350px;
-      border-radius: 10px;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+
+    .login-box h1 {
       text-align: center;
+      margin-bottom: 5px;
+      color: #203a43;
     }
-    input, button {
+
+    .login-box p {
+      text-align: center;
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 25px;
+    }
+
+    label {
+      font-size: 14px;
+      color: #333;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    input {
       width: 100%;
-      padding: 10px;
-      margin-top: 10px;
-      font-size: 16px;
+      padding: 12px;
+      margin-bottom: 18px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 15px;
     }
+
+    input:focus {
+      outline: none;
+      border-color: #2c5364;
+    }
+
     button {
+      width: 100%;
+      padding: 12px;
       background: #2c5364;
-      color: white;
+      color: #fff;
       border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
     }
-    #otpBox { display: none; }
+
+    button:hover {
+      background: #203a43;
+    }
+
+    .links {
+      margin-top: 15px;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .links a {
+      color: #2c5364;
+      text-decoration: none;
+    }
+
+    .links a:hover {
+      text-decoration: underline;
+    }
+
+    .footer {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 12px;
+      color: #888;
+    }
   </style>
 </head>
 
 <body>
 
-<div class="box">
-  <h2>Biniyog</h2>
+  <div class="login-box">
+    <h1>Biniyog</h1>
+    <p>মোবাইল নাম্বার ও পাসওয়ার্ড দিয়ে লগইন করুন</p>
 
-  <input id="phone" type="tel" placeholder="01XXXXXXXXX">
-  <div id="recaptcha-container"></div>
-  <button onclick="sendOTP()">OTP পাঠান</button>
+    <form>
+      <label for="mobile">মোবাইল নাম্বার</label>
+      <input 
+        type="tel" 
+        id="mobile" 
+        placeholder="01XXXXXXXXX" 
+        required
+      >
 
-  <div id="otpBox">
-    <input id="otp" placeholder="OTP লিখুন">
-    <button onclick="verifyOTP()">Verify</button>
+      <label for="password">পাসওয়ার্ড</label>
+      <input 
+        type="password" 
+        id="password" 
+        placeholder="আপনার পাসওয়ার্ড"
+        required
+      >
+
+      <button type="submit">লগইন</button>
+    </form>
+
+    <div class="links">
+      <a href="#">পাসওয়ার্ড ভুলে গেছেন?</a><br><br>
+      নতুন ইউজার? <a href="#">একাউন্ট তৈরি করুন</a>
+    </div>
+
+    <div class="footer">
+      © 2025 Biniyog. All rights reserved.
+    </div>
   </div>
-
-  <p id="msg"></p>
-</div>
-
-<script>
-  // ✅ তোমার Firebase Config (ঠিক আছে)
-  const firebaseConfig = {
-    apiKey: "AIzaSyDrU8KkFr1z4KZOSqHjXyeZMhRykQjiPbI",
-    authDomain: "biniyog-c67ae.firebaseapp.com",
-    projectId: "biniyog-c67ae",
-    appId: "1:884413798318:web:ad0e4bf6baa00183b6da3f"
-  };
-
-  firebase.initializeApp(firebaseConfig);
-  const auth = firebase.auth();
-
-  window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
-    'recaptcha-container',
-    { size: 'invisible' }
-  );
-
-  function sendOTP() {
-    const phone = document.getElementById("phone").value;
-    const phoneNumber = "+880" + phone.substring(1);
-
-    auth.signInWithPhoneNumber(phoneNumber, window.recaptchaVerifier)
-      .then((confirmationResult) => {
-        window.confirmationResult = confirmationResult;
-        document.getElementById("otpBox").style.display = "block";
-        document.getElementById("msg").innerText = "OTP পাঠানো হয়েছে";
-      })
-      .catch((error) => {
-        document.getElementById("msg").innerText = error.message;
-      });
-  }
-
-  function verifyOTP() {
-    const code = document.getElementById("otp").value;
-
-    confirmationResult.confirm(code)
-      .then(() => {
-        document.getElementById("msg").innerText = "লগইন সফল ✅";
-      })
-      .catch(() => {
-        document.getElementById("msg").innerText = "ভুল OTP ❌";
-      });
-  }
-</script>
 
 </body>
 </html>
