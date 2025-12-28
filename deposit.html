@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<title>Biniyog | Deposit</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{margin:0;font-family:Arial;background:#f4f6f8}
+.header{background:#16a34a;color:#fff;padding:15px;text-align:center}
+.card{background:#fff;margin:15px;padding:15px;border-radius:12px}
+input,select,button{
+  width:100%;
+  padding:10px;
+  margin-top:10px;
+  border-radius:6px;
+  border:1px solid #ccc;
+}
+button{
+  background:#16a34a;
+  color:#fff;
+  border:none;
+  font-size:16px;
+}
+.note{
+  background:#ecfdf5;
+  padding:10px;
+  border-radius:8px;
+  margin-top:10px;
+  font-size:14px;
+}
+.back{text-align:center;margin:15px}
+.back a{text-decoration:none;color:#16a34a;font-weight:bold}
+</style>
+</head>
+
+<body>
+
+<script>
+const user = localStorage.getItem("loggedInUser");
+if(!user){ location.href="index.html"; }
+</script>
+
+<div class="header">
+<h2>💳 Deposit Request</h2>
+</div>
+
+<div class="card">
+
+<label>Deposit Amount (৳)</label>
+<input type="number" id="amount" placeholder="Minimum 500">
+
+<label>Payment Method</label>
+<select id="method">
+  <option value="">Select Method</option>
+  <option value="bKash">bKash</option>
+  <option value="Nagad">Nagad</option>
+  <option value="Rocket">Rocket</option>
+</select>
+
+<label>Sender Mobile Number</label>
+<input type="tel" id="number" placeholder="Your payment number">
+
+<button onclick="submitDeposit()">Submit Deposit</button>
+
+<div class="note">
+📌 <b>Deposit Instructions:</b><br>
+• Minimum Deposit ৳500<br>
+• Send money to <b>01748786117</b><br>
+• Method: bKash / Nagad / Rocket<br>
+• Deposit Pending থাকবে<br>
+• Admin Approve করলে Balance যোগ হবে
+</div>
+
+</div>
+
+<div class="back">
+<a href="dashboard.html">⬅ Dashboard</a>
+</div>
+
+<script>
+function submitDeposit(){
+  let amount = Number(document.getElementById("amount").value);
+  let method = document.getElementById("method").value;
+  let number = document.getElementById("number").value.trim();
+
+  if(amount < 500){
+    alert("❌ Minimum Deposit ৳500");
+    return;
+  }
+
+  if(method === "" || number === ""){
+    alert("❌ সব তথ্য পূরণ করুন");
+    return;
+  }
+
+  let deposits = JSON.parse(localStorage.getItem("deposits")) || [];
+
+  deposits.push({
+    user: user,
+    amount: amount,
+    method: method,
+    number: number,
+    status: "pending",
+    time: Date.now()
+  });
+
+  localStorage.setItem("deposits", JSON.stringify(deposits));
+
+  alert("✅ Deposit Request Submitted (Pending)");
+
+  document.getElementById("amount").value="";
+  document.getElementById("number").value="";
+}
+</script>
+
+</body>
+</html>
