@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Biniyog Dashboard</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+body{
+    margin:0;
+    font-family: Arial, sans-serif;
+    background:#f2f2f2;
+}
+
+/* Header */
+.header{
+    background:#d81b60;
+    color:#fff;
+    padding:15px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.profile-box{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.profile-box i{
+    font-size:30px;
+}
+
+.balance-btn{
+    background:#fff;
+    color:#d81b60;
+    padding:6px 14px;
+    border-radius:20px;
+    font-weight:bold;
+    border:none;
+    cursor:pointer;
+}
+
+.logout{
+    cursor:pointer;
+    font-size:16px;
+}
+
+/* Notice */
+.notice{
+    background:#f9a825;
+    color:#fff;
+    margin:10px;
+    padding:10px;
+    border-radius:6px;
+    text-align:center;
+}
+
+/* Grid */
+.grid{
+    background:#fff;
+    margin:10px;
+    padding:15px 10px;
+    border-radius:10px;
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:15px;
+    text-align:center;
+}
+
+.icon-box{
+    cursor:pointer;
+}
+
+.icon{
+    width:58px;
+    height:58px;
+    background:#d81b60;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin:0 auto 6px;
+}
+
+.icon i{
+    color:#fff;
+    font-size:22px;
+}
+
+.icon-text{
+    font-size:13px;
+    color:#333;
+}
+
+/* Banner */
+.banner{
+    margin:10px;
+}
+
+.banner img{
+    width:100%;
+    border-radius:10px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- Header -->
+<div class="header">
+    <div class="profile-box">
+        <i class="fa-solid fa-user-circle"></i>
+        <button class="balance-btn" onclick="showBalance()">Tap to Balance</button>
+    </div>
+
+    <div class="logout" onclick="logout()">
+        <i class="fa-solid fa-right-from-bracket"></i> Logout
+    </div>
+</div>
+
+<!-- Notice -->
+<div class="notice">
+    বিনিয়োগ শেয়ার মার্কেটে স্বাগতম
+</div>
+
+<!-- Icons -->
+<div class="grid">
+
+    <div class="icon-box">
+        <div class="icon"><i class="fa-solid fa-list-check"></i></div>
+        <div class="icon-text">Task</div>
+    </div>
+
+    <div class="icon-box">
+        <div class="icon"><i class="fa-solid fa-money-bill"></i></div>
+        <div class="icon-text">Deposit</div>
+    </div>
+
+    <div class="icon-box">
+        <div class="icon"><i class="fa-solid fa-wallet"></i></div>
+        <div class="icon-text">Withdraw</div>
+    </div>
+
+    <div class="icon-box">
+        <div class="icon"><i class="fa-solid fa-credit-card"></i></div>
+        <div class="icon-text">Plan</div>
+    </div>
+
+    <div class="icon-box">
+        <div class="icon"><i class="fa-solid fa-user"></i></div>
+        <div class="icon-text">Profile</div>
+    </div>
+
+    <div class="icon-box">
+        <div class="icon"><i class="fa-solid fa-users"></i></div>
+        <div class="icon-text">Refer</div>
+    </div>
+
+    <div class="icon-box">
+        <div class="icon"><i class="fa-solid fa-right-left"></i></div>
+        <div class="icon-text">Transaction</div>
+    </div>
+
+    <div class="icon-box">
+        <div class="icon"><i class="fa-solid fa-circle-info"></i></div>
+        <div class="icon-text">About</div>
+    </div>
+
+</div>
+
+<!-- Banner -->
+<div class="banner">
+    <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30">
+</div>
+
+<script>
+// 🔹 Default Balance = 100
+function showBalance(){
+    alert("আপনার বর্তমান ব্যালেন্স: ৳100");
+}
+
+// Logout
+function logout(){
+    window.location.href = "index.html";
+}
+</script>
+
+</body>
+</html>
