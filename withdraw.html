@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<title>Biniyog | Withdraw</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{margin:0;font-family:Arial;background:#f4f6f8}
+.header{background:#dc2626;color:#fff;padding:15px;text-align:center}
+.card{background:#fff;margin:15px;padding:15px;border-radius:12px}
+input,select,button{
+  width:100%;
+  padding:10px;
+  margin-top:10px;
+  border-radius:6px;
+  border:1px solid #ccc;
+}
+button{
+  background:#dc2626;
+  color:#fff;
+  border:none;
+  font-size:16px;
+}
+.note{
+  background:#fef2f2;
+  padding:10px;
+  border-radius:8px;
+  margin-top:10px;
+  font-size:14px;
+}
+.back{text-align:center;margin:15px}
+.back a{text-decoration:none;color:#dc2626;font-weight:bold}
+</style>
+</head>
+
+<body>
+
+<script>
+const user = localStorage.getItem("loggedInUser");
+if(!user){ location.href="index.html"; }
+</script>
+
+<div class="header">
+<h2>💸 Withdraw Request</h2>
+</div>
+
+<div class="card">
+<label>Withdraw Amount (৳)</label>
+<input type="number" id="amount" placeholder="Minimum 500">
+
+<label>Payment Method</label>
+<select id="method">
+  <option value="">Select Method</option>
+  <option value="bKash">bKash</option>
+  <option value="Nagad">Nagad</option>
+  <option value="Rocket">Rocket</option>
+</select>
+
+<label>Mobile Number</label>
+<input type="tel" id="number" placeholder="Payment number">
+
+<button onclick="requestWithdraw()">Submit Withdraw</button>
+
+<div class="note">
+🔔 <b>Withdraw Rules:</b><br>
+• Minimum Withdraw ৳500<br>
+• Balance কম হলে Withdraw হবে না<br>
+• Withdraw Pending থাকবে<br>
+• Admin Approve করলে টাকা কাটবে
+</div>
+</div>
+
+<div class="back">
+<a href="dashboard.html">⬅ Dashboard</a>
+</div>
+
+<script>
+function getBalance(){
+  let deposits = JSON.parse(localStorage.getItem("deposits"))||[];
+  let withdraws = JSON.parse(localStorage.getItem("withdraws"))||[];
+  let d=0,w=0;
+
+  deposits.filter(x=>x.user===user)
+    .forEach(x=>d+=Number(x.amount));
+
+  withdraws.filter(x=>x.user===user && x.status==="approved")
+    .forEach(x=>w+=Number(x.amount));
+
+  return d-w;
+}
+
+function requestWithdraw(){
+  let amount = Number(document.getElementById("amount").value);
+  let method = document.getElementById("method").value;
+  let number = document.getElementById("number").value.trim();
+
+  if(amount < 500){
+    alert("❌ Minimum Withdraw ৳500");
+    return;
+  }
+
+  if(amount > getBalance()){
+    alert("❌ পর্যাপ্ত ব্যালেন্স নেই");
+    return;
+  }
+
+  if(method === "" || number === ""){
+    alert("❌ সব তথ্য পূরণ করুন");
+    return;
+  }
+
+  let withdraws = JSON.parse(localStorage.getItem("withdraws")) || [];
+
+  withdraws.push({
+    user: user,
+    amount: amount,
+    method: method,
+    number: number,
+    status: "pending",
+    time: Date.now()
+  });
+
+  localStorage.setItem("withdraws", JSON.stringify(withdraws));
+
+  alert("✅ Withdraw Request Submitted (Pending)");
+
+  document.getElementById("amount").value = "";
+  document.getElementById("number").value = "";
+}
+</script>
+
+</body>
+</html>
