@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <title>Biniyog | Balance</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+    }
+    .header {
+      background: #4caf50;
+      color: #fff;
+      padding: 15px;
+      text-align: center;
+    }
+    .card {
+      background: #fff;
+      margin: 15px;
+      padding: 15px;
+      border-radius: 10px;
+    }
+    .amount {
+      font-size: 30px;
+      font-weight: bold;
+      color: #2e7d32;
+    }
+    .row {
+      display: flex;
+      justify-content: space-between;
+      margin: 8px 0;
+      font-size: 15px;
+    }
+    .approved {
+      color: #4caf50;
+      font-weight: bold;
+    }
+    .pending {
+      color: #ff9800;
+      font-weight: bold;
+    }
+    .history {
+      font-size: 14px;
+      border-bottom: 1px solid #eee;
+      padding: 6px 0;
+    }
+    .back {
+      text-align: center;
+      margin: 15px;
+    }
+    .back a {
+      text-decoration: none;
+      color: #4caf50;
+    }
+  </style>
+</head>
+
+<body>
+
+<script>
+  // Login protection
+  const user = localStorage.getItem("loggedInUser");
+  if (!user) {
+    window.location.href = "index.html";
+  }
+</script>
+
+<div class="header">
+  <h2>💰 My Balance</h2>
+</div>
+
+<!-- Current Balance -->
+<div class="card">
+  <div class="row">
+    <span>বর্তমান ব্যালেন্স</span>
+    <span class="amount">৳ <span id="balance">0</span></span>
+  </div>
+</div>
+
+<!-- Summary -->
+<div class="card">
+  <h3>📊 হিসাব সংক্ষেপ</h3>
+  <div class="row">
+    <span>মোট ডিপোজিট</span>
+    <span class="approved">৳ <span id="totalDeposit">0</span></span>
+  </div>
+  <div class="row">
+    <span>মোট উইথড্র (Approved)</span>
+    <span class="approved">৳ <span id="totalWithdraw">0</span></span>
+  </div>
+  <div class="row">
+    <span>Pending Withdraw</span>
+    <span class="pending">৳ <span id="pendingWithdraw">0</span></span>
+  </div>
+</div>
+
+<!-- Deposit History -->
+<div class="card">
+  <h3>💳 Deposit History</h3>
+  <div id="depositHistory"></div>
+</div>
+
+<!-- Withdraw History -->
+<div class="card">
+  <h3>💸 Withdraw History</h3>
+  <div id="withdrawHistory"></div>
+</div>
+
+<div class="back">
+  <a href="dashboard.html">⬅ Dashboard এ ফিরে যান</a>
+</div>
+
+<script>
+  function loadBalance() {
+    let deposits = JSON.parse(localStorage.getItem("deposits")) || [];
+    let withdraws = JSON.parse(localStorage.getItem("withdraws")) || [];
+
+    let totalDeposit = 0;
+    let totalWithdraw = 0;
+    let pendingWithdraw = 0;
+
+    let depHTML = "";
+    let withHTML = "";
+
+    deposits
+      .filter(d => d.user === user)
+      .forEach(d => {
+        totalDeposit += Number(d.amount);
+        depHTML += `
+          <div class="history">
+            ৳${d.amount} • ${d.method} • Approved
+          </div>`;
+      });
+
+    withdraws
+      .filter(w => w.user === user)
+      .forEach(w => {
+        if (w.status === "approved") {
+          totalWithdraw += Number(w.amount);
+        } else {
+          pendingWithdraw += Number(w.amount);
+        }
+
+        withHTML += `
+          <div class="history">
+            ৳${w.amount} • ${w.method} • ${w.status}
+          </div>`;
+      });
+
+    document.getElementById("totalDeposit").innerText = totalDeposit;
+    document.getElementById("totalWithdraw").innerText = totalWithdraw;
+    document.getElementById("pendingWithdraw").innerText = pendingWithdraw;
+
+    document.getElementById("balance").innerText =
+      totalDeposit - totalWithdraw;
+
+    document.getElementById("depositHistory").innerHTML =
+      depHTML || "কোনো ডিপোজিট নেই";
+
+    document.getElementById("withdrawHistory").innerHTML =
+      withHTML || "কোনো উইথড্র নেই";
+  }
+
+  loadBalance();
+</script>
+
+</body>
+</html>
