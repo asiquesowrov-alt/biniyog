@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Biniyog | Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+body{
+  margin:0;
+  font-family:Arial, sans-serif;
+  background:#f2f2f2;
+}
+
+.topbar{
+  background:#d81b60;
+  color:#fff;
+  padding:15px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.profile{
+  display:flex;
+  align-items:center;
+}
+
+.profile img{
+  width:40px;
+  height:40px;
+  border-radius:50%;
+  margin-right:10px;
+}
+
+.balance{
+  background:#fff;
+  color:#d81b60;
+  padding:5px 12px;
+  border-radius:20px;
+  font-weight:bold;
+}
+
+.logout{
+  cursor:pointer;
+}
+
+.notice{
+  background:#f9a825;
+  color:#000;
+  padding:10px;
+  margin:10px;
+  border-radius:8px;
+  font-size:14px;
+}
+
+.grid{
+  background:#fff;
+  margin:10px;
+  padding:15px;
+  border-radius:12px;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:15px;
+  text-align:center;
+}
+
+.item{
+  cursor:pointer;
+}
+
+.item div{
+  width:60px;
+  height:60px;
+  background:#d81b60;
+  border-radius:50%;
+  margin:0 auto 8px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#fff;
+  font-size:22px;
+}
+
+.banner{
+  margin:10px;
+  border-radius:12px;
+  overflow:hidden;
+}
+
+.banner img{
+  width:100%;
+  display:block;
+}
+</style>
+</head>
+
+<body>
+
+<!-- Top -->
+<div class="topbar">
+  <div class="profile">
+    <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png">
+    <div>
+      <div>Profile</div>
+      <div class="balance">৳ <span id="balance">0</span></div>
+    </div>
+  </div>
+
+  <div class="logout" onclick="logout()">⎋ Logout</div>
+</div>
+
+<!-- Notice -->
+<div class="notice">
+ ℹ️ বিনিয়োগ শেয়ার মার্কেটে স্বাগতম
+</div>
+
+<!-- Grid -->
+<div class="grid">
+  <div class="item"><div>✔</div>Task</div>
+  <div class="item"><div>💵</div>Deposit</div>
+  <div class="item"><div>💳</div>Withdraw</div>
+  <div class="item"><div>📦</div>Plan</div>
+
+  <div class="item"><div>👤</div>Profile</div>
+  <div class="item"><div>👥</div>Refer</div>
+  <div class="item"><div>🔁</div>Transaction</div>
+  <div class="item"><div>ℹ️</div>About</div>
+</div>
+
+<!-- Banner -->
+<div class="banner">
+  <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f">
+</div>
+
+<!-- Firebase -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+import { getFirestore, doc, onSnapshot }
+from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBFsTzlRPoWHVXEHbKrPdwxslxZGa7Kqfw",
+  authDomain: "biniyog-95d00.firebaseapp.com",
+  projectId: "biniyog-95d00",
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// demo login mobile (later index.html থেকে session নেব)
+const mobile = localStorage.getItem("mobile");
+
+if(!mobile){
+  window.location.href="index.html";
+}
+
+// REAL TIME BALANCE
+const ref = doc(db,"users",mobile);
+onSnapshot(ref,(snap)=>{
+  if(snap.exists()){
+    document.getElementById("balance").innerText =
+      snap.data().balance || 0;
+  }
+});
+
+// logout
+window.logout = ()=>{
+  localStorage.removeItem("mobile");
+  window.location.href="index.html";
+}
+</script>
+
+</body>
+</html>
