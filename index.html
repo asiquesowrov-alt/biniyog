@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<title>Login | Biniyog</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body{font-family:sans-serif;background:#eee}
+.box{max-width:360px;margin:60px auto;background:#fff;padding:25px;border-radius:10px}
+input,button{width:100%;padding:12px;margin-top:10px}
+button{background:#7b2cbf;color:#fff;border:none}
+a{display:block;margin-top:10px;text-align:center}
+</style>
+</head>
+<body>
+
+<div class="box">
+<h2>Login</h2>
+<input id="mobile" placeholder="Mobile Number">
+<input id="password" placeholder="Password" type="password">
+<button onclick="login()">Login</button>
+<a href="signup.html">Open new account</a>
+<p id="msg"></p>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+import { getFirestore, doc, getDoc } 
+from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBFsTzlRPoWHVXEHbKrPdwxslxZGa7Kqfw",
+  authDomain: "biniyog-95d00.firebaseapp.com",
+  projectId: "biniyog-95d00"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+window.login = async ()=>{
+  const ref = doc(db,"users",mobile.value);
+  const snap = await getDoc(ref);
+  if(!snap.exists()) return msg.innerText="User not found";
+
+  if(snap.data().password !== password.value)
+    return msg.innerText="Wrong password";
+
+  localStorage.setItem("mobile",mobile.value);
+  location.href="dashboard.html";
+}
+</script>
+</body>
+</html>
