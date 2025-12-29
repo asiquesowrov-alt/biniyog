@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Biniyog | Sign Up</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+body{
+  margin:0;
+  background:#f3f3f3;
+  font-family:Arial, sans-serif;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+}
+
+.card{
+  background:#fff;
+  width:350px;
+  padding:25px;
+  border-radius:18px;
+  box-shadow:0 10px 25px rgba(0,0,0,.15);
+  text-align:center;
+}
+
+h2{
+  color:#7a2fbf;
+  margin-bottom:25px;
+}
+
+.field{
+  display:flex;
+  align-items:center;
+  border-bottom:2px solid #ddd;
+  margin-bottom:20px;
+  padding:5px;
+}
+
+.field span{
+  font-size:18px;
+  margin-right:8px;
+}
+
+.field input{
+  border:none;
+  outline:none;
+  width:100%;
+  font-size:15px;
+  padding:8px 0;
+}
+
+button{
+  width:100%;
+  background:#7a2fbf;
+  color:#fff;
+  border:none;
+  padding:14px;
+  border-radius:30px;
+  font-size:16px;
+  cursor:pointer;
+}
+
+button:hover{
+  background:#6926a6;
+}
+
+.msg{
+  margin-top:15px;
+  font-size:14px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+
+  <h2>Open New Account</h2>
+
+  <div class="field">
+    <span>👤</span>
+    <input id="name" placeholder="Full Name">
+  </div>
+
+  <div class="field">
+    <span>📞</span>
+    <input id="mobile" placeholder="Mobile Number">
+  </div>
+
+  <div class="field">
+    <span>🔒</span>
+    <input id="pass1" type="password" placeholder="New Password">
+  </div>
+
+  <div class="field">
+    <span>🔁</span>
+    <input id="pass2" type="password" placeholder="Repeat New Password">
+  </div>
+
+  <button onclick="signup()">SIGN UP</button>
+
+  <div class="msg" id="msg"></div>
+
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+import { getFirestore, doc, setDoc, getDoc, serverTimestamp }
+from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBFsTzlRPoWHVXEHbKrPdwxslxZGa7Kqfw",
+  authDomain: "biniyog-95d00.firebaseapp.com",
+  projectId: "biniyog-95d00",
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+window.signup = async () => {
+  const name = document.getElementById("name").value.trim();
+  const mobile = document.getElementById("mobile").value.trim();
+  const pass1 = document.getElementById("pass1").value;
+  const pass2 = document.getElementById("pass2").value;
+  const msg = document.getElementById("msg");
+
+  if(!name || !mobile || !pass1 || !pass2){
+    msg.style.color="red";
+    msg.innerText="All fields are required";
+    return;
+  }
+
+  if(pass1 !== pass2){
+    msg.style.color="red";
+    msg.innerText="Passwords do not match";
+    return;
+  }
+
+  try{
+    const ref = doc(db,"users",mobile);
+    const snap = await getDoc(ref);
+
+    if(snap.exists()){
+      msg.style.color="red";
+      msg.innerText="Mobile number already registered";
+      return;
+    }
+
+    await setDoc(ref,{
+      name: name,
+      mobile: mobile,
+      password: pass1,
+      balance: 0,
+      status: "active",
+      createdAt: serverTimestamp()
+    });
+
+    msg.style.color="green";
+    msg.innerText="Account created successfully";
+
+    setTimeout(()=>{
+      location.href="index.html";
+    },1200);
+
+  }catch(err){
+    msg.style.color="red";
+    msg.innerText="Signup failed";
+  }
+};
+</script>
+
+</body>
+</html>
