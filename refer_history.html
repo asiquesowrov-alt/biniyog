@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Refer History</title>
+<style>
+body{margin:0;font-family:Arial;background:#0f172a;color:#fff}
+.header{padding:15px;background:#020617;font-size:20px}
+.container{padding:15px}
+.card{background:#020617;border-radius:10px;padding:12px;margin-bottom:10px}
+.pending{color:#facc15}
+.approved{color:#22c55e}
+.small{color:#94a3b8;font-size:13px}
+</style>
+</head>
+<body>
+
+<div class="header">👥 Refer History</div>
+<div class="container" id="list">Loading...</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
+import { getFirestore, collection, query, where, getDocs, orderBy } 
+from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
+
+const app = initializeApp({
+  apiKey:"AIzaSyBFsTzlRPoWHVXEHbKrPdwxslxZGa7Kqfw",
+  projectId:"biniyog-95d00"
+});
+const auth = getAuth(app);
+const db = getFirestore(app);
+const list = document.getElementById("list");
+
+onAuthStateChanged(auth, async(user)=>{
+  if(!user){location.href="index.html";return;}
+  const q = query(
+    collection(db,"refer_commissions"),
+    where("referrerUid","==",user.uid),
+    orderBy("createdAt","desc")
+  );
+  const snap = await getDocs(q);
+  list.innerHTML="";
+  if(snap.empty){list.innerHTML="কোনো Refer নেই";return;}
+  snap.forEach(d=>{
+    const r=d.data();
+    list.innerHTML+=`
+      <div class="card">
+        <b>৳ ${r.amount}</b><br>
+        <span class="${r.status}">${r.status.toUpperCase()}</span><br>
+        <span class="small">User: ${r.newUserUid}</span>
+      </div>`;
+  });
+});
+</script>
+</body>
+</html>
