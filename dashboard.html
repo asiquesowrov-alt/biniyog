@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Dashboard | Biniyog</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{font-family:sans-serif;margin:0}
+.top{background:#e91e63;color:#fff;padding:15px;display:flex;justify-content:space-between}
+.card{padding:20px}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div>Dashboard</div>
+  <button onclick="logout()">Logout</button>
+</div>
+
+<div class="card">
+  <h3>Name: <span id="name"></span></h3>
+  <h3>Balance: ৳ <span id="balance"></span></h3>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
+import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBFsTzlRPoWHVXEHbKrPdwxslxZGa7Kqfw",
+  authDomain: "biniyog-95d00.firebaseapp.com",
+  projectId: "biniyog-95d00"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+onAuthStateChanged(auth,(user)=>{
+  if(!user){
+    location.href="index.html";
+  }else{
+    onSnapshot(doc(db,"users",user.uid),(snap)=>{
+      name.innerText = snap.data().name;
+      balance.innerText = snap.data().balance;
+    });
+  }
+});
+
+window.logout = ()=>{
+  signOut(auth).then(()=> location.href="index.html");
+};
+</script>
+</body>
+</html>
