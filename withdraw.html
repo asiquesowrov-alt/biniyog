@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Withdraw</title>
+
+<style>
+body{
+  margin:0;
+  font-family:Arial;
+  background:linear-gradient(135deg,#020617,#0f172a);
+  color:#fff;
+}
+.header{
+  padding:15px;
+  font-size:20px;
+  background:#020617;
+}
+.card{
+  margin:15px;
+  background:#020617;
+  border-radius:14px;
+  padding:18px;
+}
+input,select{
+  width:100%;
+  padding:12px;
+  margin-top:10px;
+  border-radius:8px;
+  border:none;
+  background:#020617;
+  color:#fff;
+  font-size:15px;
+}
+button{
+  width:100%;
+  margin-top:16px;
+  padding:14px;
+  border:none;
+  border-radius:10px;
+  background:#22c55e;
+  font-size:16px;
+  cursor:pointer;
+}
+.msg{text-align:center;margin-top:10px}
+.error{color:#f87171}
+.success{color:#22c55e}
+</style>
+</head>
+<body>
+
+<div class="header">🏧 Withdraw</div>
+
+<div class="card">
+  <label>Mobile Number</label>
+  <input id="phone" placeholder="01XXXXXXXXX">
+
+  <label>Payment Method</label>
+  <select id="method">
+    <option>Bkash</option>
+    <option>Nagad</option>
+    <option>Rocket</option>
+  </select>
+
+  <label>Amount</label>
+  <input id="amount" type="number" placeholder="Minimum 500">
+
+  <button onclick="submitWithdraw()">Submit Withdraw</button>
+  <div id="msg" class="msg"></div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, addDoc, collection } 
+from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
+
+const app = initializeApp({
+  apiKey:"AIzaSyBFsTzlRPoWHVXEHbKrPdwxslxZGa7Kqfw",
+  projectId:"biniyog-95d00"
+});
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+let currentUser, balance=0;
+
+onAuthStateChanged(auth, async(user)=>{
+  if(!user){location.href="index.html";return;}
+  currentUser=user;
+  const snap=await getDoc(doc(db,"users",user.uid));
+  balance=snap.data().balance||0;
+});
+
+window.submitWithdraw = async()=>{
+  const phone=phone.value.trim();
+  const method=method.value;
+  const amt=parseInt(amount.value);
+  const msg=document.getElementById("msg");
+
+  msg.innerHTML="";
+
+  if(!phone||!amt){
+    msg.innerHTML="<span class='error'>সব তথ্য দিন</span>";return;
+  }
+  if(amt<500){
+    msg.innerHTML="<span class='error'>Minimum 500৳</span>";return;
+  }
+  if(amt>balance){
+    msg.innerHTML="<span class='error'>পর্যাপ্ত ব্যালেন্স নেই</span>";return;
+  }
+
+  await addDoc(collection(db,"withdraw_requests"),{
+    uid:currentUser.uid,
+    phone,
+    method,
+    amount:amt,
+    status:"pending",
+    createdAt:Date.now()
+  });
+
+  msg.innerHTML="<span class='success'>Withdraw request submitted</span>";
+};
+</script>
+</body>
+</html>
