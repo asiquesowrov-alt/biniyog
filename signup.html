@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Biniyog | Signup</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+body{
+  margin:0;
+  font-family:Arial;
+  background:#f2f2f2;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+}
+.card{
+  background:#fff;
+  width:340px;
+  padding:25px;
+  border-radius:12px;
+  box-shadow:0 4px 12px rgba(0,0,0,.1);
+}
+h2{text-align:center;color:#7a2fbf}
+input{
+  width:100%;
+  padding:12px;
+  margin-top:10px;
+  border-radius:8px;
+  border:1px solid #ccc;
+  font-size:15px;
+}
+button{
+  width:100%;
+  padding:12px;
+  margin-top:15px;
+  border:none;
+  border-radius:8px;
+  background:#7a2fbf;
+  color:#fff;
+  font-size:16px;
+}
+.msg{
+  text-align:center;
+  margin-top:10px;
+  font-size:14px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+  <h2>Create Account</h2>
+
+  <input id="name" placeholder="Full Name">
+  <input id="mobile" placeholder="Mobile Number">
+  <input id="pass1" type="password" placeholder="New Password">
+  <input id="pass2" type="password" placeholder="Repeat New Password">
+
+  <button onclick="signup()">Signup</button>
+  <div class="msg" id="msg"></div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+import { getFirestore, doc, setDoc, serverTimestamp } 
+from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBFsTzlRPoWHVXEHbKrPdwxslxZGa7Kqfw",
+  authDomain: "biniyog-95d00.firebaseapp.com",
+  projectId: "biniyog-95d00",
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+window.signup = async () => {
+  const name = document.getElementById("name").value.trim();
+  const mobile = document.getElementById("mobile").value.trim();
+  const pass1 = document.getElementById("pass1").value;
+  const pass2 = document.getElementById("pass2").value;
+  const msg = document.getElementById("msg");
+
+  if(!name || !mobile || !pass1 || !pass2){
+    msg.style.color="red";
+    msg.innerText="সব ফিল্ড পূরণ করুন";
+    return;
+  }
+
+  if(pass1 !== pass2){
+    msg.style.color="red";
+    msg.innerText="Password মিলেনি";
+    return;
+  }
+
+  try{
+    await setDoc(doc(db,"users",mobile),{
+      name: name,
+      mobile: mobile,
+      password: pass1,
+      balance: 0,
+      status: "active",
+      createdAt: serverTimestamp()
+    });
+
+    msg.style.color="green";
+    msg.innerText="Account Created Successfully";
+
+    setTimeout(()=>{
+      window.location.href="index.html";
+    },1500);
+
+  }catch(err){
+    msg.style.color="red";
+    msg.innerText="Error: "+err.message;
+  }
+};
+</script>
+
+</body>
+</html>
