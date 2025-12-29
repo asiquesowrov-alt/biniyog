@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Biniyog | Admin Login</title>
+
+<style>
+body{
+  margin:0;
+  height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family:Arial;
+  background:#0f172a;
+}
+.box{
+  background:#fff;
+  width:320px;
+  padding:20px;
+  border-radius:14px;
+  box-shadow:0 10px 30px rgba(0,0,0,.25);
+}
+h2{
+  text-align:center;
+  margin-bottom:20px;
+}
+input{
+  width:100%;
+  padding:12px;
+  margin-bottom:12px;
+  border-radius:8px;
+  border:1px solid #ccc;
+}
+button{
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:8px;
+  background:#22c55e;
+  color:#fff;
+  font-size:16px;
+  cursor:pointer;
+}
+.msg{
+  margin-top:10px;
+  text-align:center;
+  font-size:14px;
+  color:#ef4444;
+}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+  <h2>👑 Admin Login</h2>
+
+  <input type="email" id="email" placeholder="Admin Email">
+  <input type="password" id="password" placeholder="Password">
+
+  <button onclick="login()">Login</button>
+
+  <div class="msg" id="msg"></div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword } 
+from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBFsTzlRPoWHVXEHbKrPdwxslxZGa7Kqfw",
+  authDomain: "biniyog-95d00.firebaseapp.com",
+  projectId: "biniyog-95d00",
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+const ADMIN_EMAIL = "admin@biniyog.com";
+
+window.login = async ()=>{
+  const email = document.getElementById("email").value.trim();
+  const pass = document.getElementById("password").value;
+  const msg = document.getElementById("msg");
+
+  if(email !== ADMIN_EMAIL){
+    msg.innerText = "❌ You are not admin";
+    return;
+  }
+
+  try{
+    await signInWithEmailAndPassword(auth,email,pass);
+    location.href="admin.html";
+  }catch(e){
+    msg.innerText = "❌ Login failed";
+  }
+};
+</script>
+
+</body>
+</html>
