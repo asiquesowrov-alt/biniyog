@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deposit</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial, sans-serif;
+    background:#f1f8ff;
+}
+.header{
+    background:#0288d1;
+    color:#fff;
+    text-align:center;
+    padding:15px;
+    font-size:22px;
+}
+.card{
+    background:#fff;
+    margin:20px;
+    padding:20px;
+    border-radius:15px;
+    box-shadow:0 2px 8px rgba(0,0,0,0.2);
+}
+label{
+    display:block;
+    margin-top:12px;
+    font-weight:bold;
+}
+input, select{
+    width:100%;
+    padding:10px;
+    margin-top:5px;
+    border-radius:8px;
+    border:1px solid #ccc;
+}
+button{
+    width:100%;
+    margin-top:20px;
+    padding:12px;
+    background:#0288d1;
+    color:#fff;
+    border:none;
+    border-radius:10px;
+    font-size:18px;
+}
+.note{
+    margin-top:15px;
+    color:#555;
+    font-size:14px;
+}
+.pending{
+    color:orange;
+    font-weight:bold;
+    margin-top:10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">💰 Deposit</div>
+
+<div class="card">
+
+<p><strong>📲 Send Money / Cash In</strong></p>
+<p>📞 <b>01748786117</b></p>
+<p>🟠 Nagad | 🔵 Bkash | 🟣 Rocket</p>
+
+<form id="depositForm">
+
+<label>Amount (Minimum 500৳)</label>
+<input type="number" id="amount" min="500" required>
+
+<label>Payment Method</label>
+<select id="method" required>
+    <option value="">Select</option>
+    <option>Nagad</option>
+    <option>Bkash</option>
+    <option>Rocket</option>
+</select>
+
+<label>Transaction ID</label>
+<input type="text" id="trxid" required>
+
+<label>Screenshot (optional)</label>
+<input type="file">
+
+<button type="submit">Submit Deposit</button>
+
+</form>
+
+<div id="msg"></div>
+
+<p class="note">
+ℹ️ ডিপোজিট সাবমিট করার পর ব্যালেন্স যোগ হবে না।  
+Admin approval এর পরে ব্যালেন্স যোগ হবে।
+</p>
+
+</div>
+
+<script>
+let deposits = JSON.parse(localStorage.getItem("pendingDeposits")) || [];
+
+document.getElementById("depositForm").addEventListener("submit", function(e){
+    e.preventDefault();
+
+    let amount = Number(document.getElementById("amount").value);
+    let method = document.getElementById("method").value;
+    let trxid = document.getElementById("trxid").value;
+
+    if(amount < 500){
+        alert("Minimum deposit 500৳");
+        return;
+    }
+
+    let depositData = {
+        amount: amount,
+        method: method,
+        trxid: trxid,
+        date: new Date().toLocaleString(),
+        status: "Pending"
+    };
+
+    deposits.push(depositData);
+    localStorage.setItem("pendingDeposits", JSON.stringify(deposits));
+
+    document.getElementById("msg").innerHTML =
+        `<p class="pending">✅ Deposit Submitted. Status: Pending</p>`;
+
+    document.getElementById("depositForm").reset();
+});
+</script>
+
+</body>
+</html>
