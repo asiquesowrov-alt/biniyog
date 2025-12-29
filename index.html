@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Biniyog | Login</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+  margin:0;
+  font-family:Arial, sans-serif;
+  background:#f2f2f2;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+}
+.card{
+  background:#fff;
+  width:100%;
+  max-width:380px;
+  padding:30px 20px;
+  border-radius:20px;
+  box-shadow:0 8px 25px rgba(0,0,0,.15);
+  text-align:center;
+}
+.avatar{
+  width:120px;
+  margin:auto;
+}
+h2{
+  color:#7a2fbf;
+  margin:15px 0 30px;
+}
+.field{
+  display:flex;
+  align-items:center;
+  border-bottom:1px solid #ccc;
+  margin-bottom:20px;
+}
+.field span{
+  font-size:18px;
+  margin-right:8px;
+}
+.field input{
+  border:none;
+  outline:none;
+  width:100%;
+  font-size:16px;
+  padding:8px 0;
+}
+button{
+  width:100%;
+  background:#7a2fbf;
+  color:#fff;
+  border:none;
+  padding:14px;
+  font-size:16px;
+  border-radius:30px;
+  cursor:pointer;
+}
+button:hover{background:#6926a6;}
+.links{
+  margin-top:20px;
+  font-size:14px;
+}
+.links a{
+  display:block;
+  margin:6px 0;
+  color:#7a2fbf;
+  text-decoration:none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+  <img src="assets/user.png" class="avatar">
+  <h2>Welcome to Biniyog</h2>
+
+  <div class="field">
+    <span>📞</span>
+    <input type="tel" id="mobile" placeholder="Mobile Number">
+  </div>
+
+  <div class="field">
+    <span>🔒</span>
+    <input type="password" id="password" placeholder="Password">
+  </div>
+
+  <button onclick="login()">LOGIN</button>
+
+  <div class="links">
+    <a href="forgot.html">Forgot password?</a>
+    <a href="signup.html">Open new account</a>
+  </div>
+</div>
+
+<!-- Firebase -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } 
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBFsTzlRPoWHVXEHbKrPdwxslxZGa7Kqfw",
+  authDomain: "biniyog-95d00.firebaseapp.com",
+  projectId: "biniyog-95d00",
+  storageBucket: "biniyog-95d00.appspot.com",
+  messagingSenderId: "523238228802",
+  appId: "1:523238228802:web:a65183bdc4c268f94efedb"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+// already login check
+onAuthStateChanged(auth, (user)=>{
+  if(user){
+    window.location.href = "dashboard.html";
+  }
+});
+
+// login function
+window.login = function(){
+  const mobile = document.getElementById("mobile").value;
+  const pass = document.getElementById("password").value;
+
+  if(!mobile || !pass){
+    alert("All fields required");
+    return;
+  }
+
+  // mobile → fake email convert
+  const email = mobile + "@biniyog.com";
+
+  signInWithEmailAndPassword(auth, email, pass)
+    .then(()=>{
+      window.location.href="dashboard.html";
+    })
+    .catch(err=>{
+      alert("Login failed");
+    });
+}
+</script>
+
+</body>
+</html>
