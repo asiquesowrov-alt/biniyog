@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<title>Biniyog | Deposit</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+/* 🔒 DESIGN UNCHANGED */
+*{ box-sizing:border-box; }
+body{
+  margin:0;
+  font-family:'Hind Siliguri',sans-serif;
+  background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.box{
+  width:100%;
+  max-width:420px;
+  background:#fff;
+  padding:28px;
+  border-radius:16px;
+  box-shadow:0 20px 45px rgba(0,0,0,.35);
+}
+h2{
+  text-align:center;
+  margin-bottom:12px;
+  color:#203a43;
+}
+.info{
+  background:#f1f5f9;
+  border-radius:12px;
+  padding:14px;
+  text-align:center;
+  font-size:14px;
+  margin-bottom:18px;
+  line-height:1.6;
+}
+label{
+  margin-top:14px;
+  display:block;
+}
+input,select{
+  width:100%;
+  padding:12px;
+  margin-top:6px;
+  font-size:15px;
+  border-radius:10px;
+  border:1px solid #cbd5e1;
+}
+button{
+  width:100%;
+  padding:14px;
+  margin-top:18px;
+  border:none;
+  border-radius:12px;
+  cursor:pointer;
+}
+.submit-btn{
+  background:linear-gradient(135deg,#11998e,#38ef7d);
+  color:#fff;
+}
+.back-btn{
+  margin-top:12px;
+  background:#6c5ce7;
+  color:#fff;
+}
+.note{
+  margin-top:14px;
+  text-align:center;
+  font-size:13px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+  <h2>ডিপোজিট করুন</h2>
+
+  <div class="info">
+    <b>Send Money / Cash In</b><br>
+    নাম্বার: <b>01748786117</b><br>
+    Minimum Deposit: <b>500৳</b>
+  </div>
+
+  <form id="depositForm">
+    <label>Payment Method</label>
+    <select id="method" required>
+      <option value="">Select</option>
+      <option value="Bkash">Bkash</option>
+      <option value="Nagad">Nagad</option>
+      <option value="Rocket">Rocket</option>
+    </select>
+
+    <label>Amount (৳)</label>
+    <input type="number" id="amount" min="500" placeholder="Minimum 500৳" required>
+
+    <label>Transaction ID</label>
+    <input type="text" id="trxId" placeholder="Transaction ID লিখুন" required>
+
+    <button type="submit" class="submit-btn">Submit Deposit</button>
+  </form>
+
+  <button id="backHome" class="back-btn">⬅ Dashboard এ ফিরে যান</button>
+
+  <div class="note">
+    ডিপোজিট সাবমিট হলে অ্যাডমিন অ্যাপ্রুভের পর ব্যালেন্স যুক্ত হবে
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+import { getAuth,onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
+import { getFirestore,collection,addDoc,serverTimestamp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBFsTzlRPoWHVXEHbKrPdwxslxZGa7Kqfw",
+  authDomain: "biniyog-95d00.firebaseapp.com",
+  projectId: "biniyog-95d00"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+let currentUser = null;
+
+onAuthStateChanged(auth,user=>{
+  if(!user){
+    location.href="index.html";
+  }else{
+    currentUser = user;
+  }
+});
+
+document.getElementById("depositForm").addEventListener("submit",async e=>{
+  e.preventDefault();
+
+  const method = methodEl.value;
+  const amount = Number(amountEl.value);
+  const trxId  = trxIdEl.value.trim();
+
+  if(!method || amount < 500 || !trxId){
+    alert("সব তথ্য সঠিকভাবে পূরণ করুন");
+    return;
+  }
+
+  await addDoc(collection(db,"deposits"),{
+    uid: currentUser.uid,
+    phone: currentUser.phoneNumber || "",
+    type: "deposit",
+    method,
+    amount,
+    trxId,
+    status: "pending",
+    createdAt: serverTimestamp()
+  });
+
+  alert("ডিপোজিট সাবমিট হয়েছে, অ্যাডমিন অ্যাপ্রুভের অপেক্ষায়");
+  location.href="transaction.html";
+});
+
+const methodEl = document.getElementById("method");
+const amountEl = document.getElementById("amount");
+const trxIdEl  = document.getElementById("trxId");
+
+document.getElementById("backHome").onclick = ()=>{
+  location.href="dashboard.html";
+};
+</script>
+
+</body>
+</html>
