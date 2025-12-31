@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Biniyog Admin Login</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+  margin:0;
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:#0b0b0b;
+  font-family: Arial, sans-serif;
+}
+.card{
+  width:100%;
+  max-width:360px;
+  background:#1a1a1a;
+  padding:25px;
+  border-radius:10px;
+}
+h2{
+  text-align:center;
+  color:#fff;
+  margin-bottom:20px;
+}
+input{
+  width:100%;
+  padding:12px;
+  margin-bottom:12px;
+  border:none;
+  border-radius:6px;
+}
+button{
+  width:100%;
+  padding:12px;
+  background:#d4af37;
+  border:none;
+  font-size:16px;
+  font-weight:bold;
+  border-radius:6px;
+  cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+  <h2>Admin Login</h2>
+  <input type="email" id="email" placeholder="Admin Email">
+  <input type="password" id="password" placeholder="Password">
+  <button onclick="adminLogin()">Login</button>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+  import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
+  import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBFsTzlRPoWHVXEHbKrPdwxslxZGa7Kqfw",
+    authDomain: "biniyog-95d00.firebaseapp.com",
+    projectId: "biniyog-95d00",
+    storageBucket: "biniyog-95d00.firebasestorage.app",
+    messagingSenderId: "523238228802",
+    appId: "1:523238228802:web:a65183bdc4c268f94efedb"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  window.adminLogin = async () => {
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value.trim();
+
+    if(!email || !password){
+      alert("Email & Password required");
+      return;
+    }
+
+    try{
+      const userCred = await signInWithEmailAndPassword(auth, email, password);
+      const uid = userCred.user.uid;
+
+      const userRef = doc(db, "users", uid);
+      const userSnap = await getDoc(userRef);
+
+      if(!userSnap.exists()){
+        alert("User data not found");
+        return;
+      }
+
+      if(userSnap.data().role !== "admin"){
+        alert("Access Denied: Not Admin");
+        return;
+      }
+
+      // ✅ Admin verified
+      window.location.href = "admin-dashboard.html";
+
+    }catch(error){
+      alert(error.message);
+    }
+  };
+</script>
+
+</body>
+</html>
