@@ -113,7 +113,6 @@ button{
 </div>
 
 <script type="module">
-/* ================= FIREBASE ================= */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
 import {
   getAuth,
@@ -129,6 +128,14 @@ import {
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
 
+/* 🔹 PHONE NORMALIZER */
+function normalizePhone(phone){
+  phone = phone.trim();
+  if(phone.startsWith("+88")) phone = phone.slice(3);
+  if(phone.startsWith("88")) phone = phone.slice(2);
+  return phone;
+}
+
 const firebaseConfig = {
   apiKey: "AIzaSyBFsTzlRPoWHVXEHbKrPdwxslxZGa7Kqfw",
   authDomain: "biniyog-95d00.firebaseapp.com",
@@ -139,7 +146,7 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-/* ================= UI ================= */
+/* UI */
 window.showSignup = ()=>{
   loginBox.classList.add("hide");
   signupBox.classList.remove("hide");
@@ -154,31 +161,27 @@ window.showLogin = ()=>{
   loginTab.classList.add("active");
 };
 
-/* ================= SIGNUP ================= */
+/* SIGNUP */
 window.signup = async ()=>{
   if(!fullName.value || !signupPhone.value || !signupPass.value){
     alert("All fields are required");
     return;
   }
-
   if(signupPass.value !== signupPass2.value){
     alert("Password mismatch");
     return;
   }
 
-  const email = signupPhone.value + "@binoyog.com";
+  const phone = normalizePhone(signupPhone.value);
+  const email = phone + "@binoyog.com";
 
   try{
-    const cred = await createUserWithEmailAndPassword(
-      auth,
-      email,
-      signupPass.value
-    );
+    const cred = await createUserWithEmailAndPassword(auth,email,signupPass.value);
 
     await setDoc(doc(db,"users",cred.user.uid),{
       uid: cred.user.uid,
       name: fullName.value,
-      phone: signupPhone.value,
+      phone: phone,
       referCode: referCode.value || null,
       balance: 0,
       role: "user",
@@ -187,18 +190,18 @@ window.signup = async ()=>{
 
     alert("Signup successful. Please login.");
     showLogin();
-
   }catch(e){
     alert(e.message);
   }
 };
 
-/* ================= LOGIN ================= */
+/* LOGIN */
 window.login = async ()=>{
   try{
+    const phone = normalizePhone(loginPhone.value);
     await signInWithEmailAndPassword(
       auth,
-      loginPhone.value + "@binoyog.com",
+      phone + "@binoyog.com",
       loginPass.value
     );
     location.href="dashboard.html";
@@ -207,31 +210,22 @@ window.login = async ()=>{
   }
 };
 
-/* ================= FORGOT PASSWORD ================= */
+/* FORGOT PASSWORD (demo only) */
 window.forgotPassword = async ()=>{
   const phone = prompt("Enter your phone number");
   if(!phone) return;
 
   const newPass = Math.random().toString(36).slice(-8);
 
-  try{
-    await addDoc(collection(db,"passwordResets"),{
-      phone: phone,
-      newPassword: newPass,
-      status: "approved",
-      createdAt: serverTimestamp()
-    });
+  await addDoc(collection(db,"passwordResets"),{
+    phone: normalizePhone(phone),
+    newPassword: newPass,
+    status: "approved",
+    createdAt: serverTimestamp()
+  });
 
-    alert(
-      "Your new password:\n\n" +
-      newPass +
-      "\n\nPlease login using this password."
-    );
-  }catch(e){
-    alert("Something went wrong");
-  }
+  alert("New password: " + newPass);
 };
 </script>
-
 </body>
 </html>
