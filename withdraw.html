@@ -99,7 +99,7 @@ button:disabled{
     <button id="submitBtn">Withdraw Submit</button>
 
     <div class="note">
-      Withdraw করলে Admin Approval প্রয়োজন
+      Withdraw সফল করতে সঠিক ফোন নাম্বার ব্যবহার করুন 
     </div>
 
     <div class="back">
@@ -194,7 +194,7 @@ submitBtn.onclick = async ()=>{
     location.href = "transaction.html";
 
   }catch(err){
-    alert("কিছু সমস্যা হয়েছে, আবার চেষ্টা করুন");
+    alert("Transaction history চেক করুন");
     submitBtn.disabled = false;
   }
 };
